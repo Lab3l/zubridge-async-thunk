@@ -22,8 +22,9 @@ export const handlers = (store: Store) => {
   return {
     'general.setValue': async (asyncDuration) => {
       const valueToSet = Math.random()
-      console.log('Start set value', asyncDuration, 'value to set', valueToSet)
+      console.log('Starting set value at', new Date().toISOString(),' with await time', asyncDuration, '. Value to set', valueToSet)
       await sleepy(asyncDuration)
+      console.log('Setting value', valueToSet, new Date().toISOString())
       setState({ value: valueToSet })
     },
   }

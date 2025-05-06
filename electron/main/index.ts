@@ -59,7 +59,7 @@ async function createWindow(window, dimensions) {
     webPreferences: {
       preload,
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
-      // nodeIntegration: true,
+      nodeIntegration: true,
 
       // Consider using contextBridge.exposeInMainWorld
       // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
@@ -110,13 +110,13 @@ app.whenReady().then(async () => {
   handlers = actionHandlers(store)
   const { unsubscribe, subscribe } = createZustandBridge(
     store,
-    // windows,
-    // {
-    //   handlers,
-    // },
+    windows,
+    {
+      handlers,
+    },
   )
-  subscribe([win1])
-  subscribe([win2])
+  // subscribe([win1])
+  // subscribe([win2])
   storeUnsubscribe = unsubscribe
   storeSubscribe = subscribe
 
