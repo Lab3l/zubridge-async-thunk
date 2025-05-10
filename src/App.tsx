@@ -12,13 +12,11 @@ function App() {
   const dispatch = useDispatch()
 
   const handleClick = async () => {
-    console.log('Clicked')
+    console.log('Clicked', new Date().toISOString(), 'Value at', value)
     await dispatch(testThunk())
-    // dispatch('general.setValue')
-    console.log('After click')
+    console.log('After click', new Date().toISOString(), 'Value at', value)
   }
 
-  console.log('Value', value)
   return (
     <div className='App'>
       <div className='logo-box'>
