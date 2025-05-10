@@ -20,7 +20,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@zubridge/electron": "^2.0.0-next.5",
+    "@zubridge/electron": "^2.0.0-next.6",
     "electron-store": "^10.0.1",
     "electron-updater": "^6.3.9",
     "ramda": "^0.30.1",
