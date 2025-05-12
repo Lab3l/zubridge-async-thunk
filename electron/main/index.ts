@@ -1,18 +1,13 @@
 import { app, BrowserWindow, shell, ipcMain } from 'electron'
-import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import os from 'node:os'
-import { update } from './update'
-import { createDispatch, createZustandBridge } from '@zubridge/electron/main';
-import { actionHandlers } from '../../src/store';
-import { store } from '../../src/store/store';
+import { createZustandBridge } from '@zubridge/electron/main'
+import { actionHandlers } from '../../src/store'
+import { store } from '../../src/store/store'
 
-const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-let storeSubscribe
-let storeUnsubscribe
 let handlers
 
 // The built directory structure
@@ -31,9 +26,7 @@ export const MAIN_DIST = path.join(process.env.APP_ROOT, 'dist-electron')
 export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
 export const VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL
 
-process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
-  ? path.join(process.env.APP_ROOT, 'public')
-  : RENDERER_DIST
+process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
 
 // Disable GPU Acceleration for Windows 7
 if (os.release().startsWith('6.1')) app.disableHardwareAcceleration()
@@ -51,7 +44,7 @@ let win2: BrowserWindow | null = null
 const preload = path.join(__dirname, '../preload/index.mjs')
 const indexHtml = path.join(RENDERER_DIST, 'index.html')
 
-async function createWindow(window, dimensions) {
+async function createWindow(window: BrowserWindow, dimensions: any) {
   window = new BrowserWindow({
     title: 'Main window',
     ...dimensions,
@@ -67,7 +60,8 @@ async function createWindow(window, dimensions) {
     },
   })
 
-  if (VITE_DEV_SERVER_URL) { // #298
+  if (VITE_DEV_SERVER_URL) {
+    // #298
     window.loadURL(VITE_DEV_SERVER_URL)
     // Open devTool if the app is not packaged
     window.webContents.openDevTools()
@@ -92,34 +86,28 @@ async function createWindow(window, dimensions) {
 app.whenReady().then(async () => {
   const height = 512
   const width = 768
-    const createWindows = async () => {
-    const createdWindows =  await Promise.all([win1, win2].map((item, index) => {
-      const dimensions = {
-        height,
-        width,
-        x: height + (index * width),
-        y: height,
-      }
-      return createWindow(item, dimensions)
-    }))
-      console.log('Created windows!', createdWindows)
-      return createdWindows
+  const createWindows = async () => {
+    const createdWindows = await Promise.all(
+      [win1, win2].map((item, index) => {
+        const dimensions = {
+          height,
+          width,
+          x: height + index * width,
+          y: height,
+        }
+        return createWindow(item as BrowserWindow, dimensions)
+      })
+    )
+    console.log('Created windows!', createdWindows)
+    return createdWindows
   }
   const windows = await createWindows()
   console.log('Windows?', windows)
   handlers = actionHandlers(store)
-  const { unsubscribe, subscribe } = createZustandBridge(
-    store,
-    windows,
-    {
-      handlers,
-    },
-  )
-  // subscribe([win1])
-  // subscribe([win2])
-  storeUnsubscribe = unsubscribe
-  storeSubscribe = subscribe
-
+  const { unsubscribe, subscribe } = createZustandBridge(store, {
+    handlers,
+  })
+  subscribe(windows)
 })
 
 app.on('window-all-closed', () => {
