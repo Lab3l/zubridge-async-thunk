@@ -20,7 +20,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@zubridge/electron": "^2.0.0-next.6",
+    "@zubridge/electron": "next",
     "electron-store": "^10.0.1",
     "electron-updater": "^6.3.9",
     "ramda": "^0.30.1",
@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.48.2",
+    "@types/ramda": "^0.30.2",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
@@ -44,5 +45,6 @@
     "vite-plugin-electron": "^0.29.0",
     "vite-plugin-electron-renderer": "^0.14.6",
     "vitest": "^2.1.5"
-  }
+  },
+  "packageManager": "pnpm@8.15.0+sha512.ea45517d5285d123eac02c3793505fa1fd6da90a2fc60d1e8d9e0c1e9292886ecfaff513f062b9d1cc8021bb8615033b1ac5bea3b2ee3fc165a6d7034bbe6b03"
 }
