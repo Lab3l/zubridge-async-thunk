@@ -1,9 +1,7 @@
 import { createStore } from 'zustand/vanilla'
-import Store from 'electron-store'
-import { isEmpty } from 'ramda'
 
 import { State } from './index'
-import { initialState as generalInitialState } from './general.ts'
+import { initialState as generalInitialState } from './general.js'
 
 export const STORE_INITIAL_STATE = {
   general: generalInitialState,
