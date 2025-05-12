@@ -1,20 +1,12 @@
 import { ipcRenderer, contextBridge } from 'electron'
 
-import { preloadZustandBridge } from '@zubridge/electron/preload'
+import { preloadBridge } from '@zubridge/electron/preload'
 
-import type { Handlers } from '@zubridge/electron'
-import { State } from '@/store';
+import { State } from '@/store'
 
-
-export const { handlers } = preloadZustandBridge<State>()
+export const { handlers } = preloadBridge<State>()
 
 contextBridge.exposeInMainWorld('zubridge', handlers)
-
-declare global {
-  interface Window {
-    zubridge: Handlers<State>
-  }
-}
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', {
@@ -40,10 +32,8 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 })
 
 // --------- Preload scripts loading ---------
-function domReady(
-  condition: DocumentReadyState[] = ['complete', 'interactive'],
-) {
-  return new Promise(resolve => {
+function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
+  return new Promise((resolve) => {
     if (condition.includes(document.readyState)) {
       resolve(true)
     } else {
@@ -58,12 +48,12 @@ function domReady(
 
 const safeDOM = {
   append(parent: HTMLElement, child: HTMLElement) {
-    if (!Array.from(parent.children).find(e => e === child)) {
+    if (!Array.from(parent.children).find((e) => e === child)) {
       return parent.appendChild(child)
     }
   },
   remove(parent: HTMLElement, child: HTMLElement) {
-    if (Array.from(parent.children).find(e => e === child)) {
+    if (Array.from(parent.children).find((e) => e === child)) {
       return parent.removeChild(child)
     }
   },
@@ -128,7 +118,7 @@ function useLoading() {
 const { appendLoading, removeLoading } = useLoading()
 domReady().then(appendLoading)
 
-window.onmessage = ev => {
+window.onmessage = (ev) => {
   ev.data.payload === 'removeLoading' && removeLoading()
 }
 
